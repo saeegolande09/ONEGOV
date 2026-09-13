@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employment Exchange Board</title>
+  <link rel="stylesheet" href="/style.css">
+
+  <style>
+    .employment-dashboard {
+      min-height: 100vh;
+      background: #f3f6fb;
+      display: flex;
+      color: #172b4d;
+    }
+
+    .employment-sidebar {
+      width: 230px;
+      background: #102f52;
+      color: white;
+      padding: 20px 14px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .employment-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 8px 24px;
+    }
+
+    .employment-brand-icon {
+      font-size: 30px;
+    }
+
+    .employment-brand h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .employment-brand p {
+      margin: 3px 0 0;
+      font-size: 11px;
+      opacity: 0.75;
+    }
+
+    .employment-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .employment-nav a {
+      color: white;
+      text-decoration: none;
+      padding: 11px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0.9;
+    }
+
+    .employment-nav a:hover,
+    .employment-nav a.active {
+      background: #1d5d99;
+      opacity: 1;
+    }
+
+    .employment-sidebar-bottom {
+      margin-top: auto;
+    }
+
+    .employment-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .employment-topbar {
+      height: 64px;
+      background: white;
+      border-bottom: 1px solid #e3e8ef;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      box-sizing: border-box;
+    }
+
+    .employment-search {
+      width: 420px;
+      max-width: 50%;
+      background: #f5f7fa;
+      border: 1px solid #e3e8ef;
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: #7b8798;
+      box-sizing: border-box;
+    }
+
+    .employment-search input {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      font-size: 12px;
+    }
+
+    .employment-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .employment-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #e8f0fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .employment-user strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .employment-user small {
+      color: #7b8798;
+      font-size: 11px;
+    }
+
+    .employment-content {
+      padding: 20px 28px 30px;
+    }
+
+    .employment-breadcrumb {
+      font-size: 11px;
+      color: #7b8798;
+      margin-bottom: 16px;
+    }
+
+    .employment-breadcrumb span {
+      margin: 0 5px;
+    }
+
+    .employment-portal-header {
+      background: white;
+      border: 1px solid #e1e7ef;
+      border-radius: 12px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+
+    .employment-title-area {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .employment-title-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: #e9f3ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 27px;
+    }
+
+    .employment-title-area h1 {
+      margin: 0 0 5px;
+      font-size: 20px;
+    }
+
+    .employment-title-area p {
+      margin: 0;
+      font-size: 12px;
+      color: #6c7a8c;
+    }
+
+    .employment-verified-box {
+      text-align: right;
+    }
+
+    .employment-verified-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #e5f7ed;
+      color: #16834b;
+      padding: 7px 12px;
+      border-radius: 18px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .employment-updated {
+      display: block;
+      margin-top: 6px;
+      font-size: 10px;
+      color: #7b8798;
+    }
+
+    .employment-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 16px;
+    }
+
+    .employment-card {
+      background: white;
+      border: 1px solid #e1e7ef;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .employment-card-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .employment-card-title h2 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .employment-mini-verified {
+      background: #e7f7ed;
+      color: #16834b;
+      padding: 5px 9px;
+      border-radius: 15px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .employment-data-row {
+      display: grid;
+      grid-template-columns: 190px 1fr auto;
+      align-items: center;
+      min-height: 50px;
+      border-bottom: 1px solid #edf0f4;
+      gap: 12px;
+    }
+
+    .employment-data-row:last-child {
+      border-bottom: none;
+    }
+
+    .employment-data-label {
+      color: #68778d;
+      font-size: 11px;
+    }
+
+    .employment-data-value {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1d2e46;
+    }
+
+    .employment-row-status {
+      color: #16834b;
+      font-size: 10px;
+      font-weight: 600;
+      background: #effaf3;
+      padding: 5px 8px;
+      border-radius: 12px;
+    }
+
+    .employment-info-box {
+      background: #eef6ff;
+      border: 1px solid #d7e9fb;
+      border-radius: 9px;
+      padding: 11px 13px;
+      display: flex;
+      gap: 9px;
+      color: #526b86;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .employment-info-icon {
+      font-size: 15px;
+    }
+
+    .employment-side-card h3 {
+      margin: 0 0 15px;
+      font-size: 14px;
+    }
+
+    .employment-department {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .employment-dept-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background: #f3f5f8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .employment-department strong {
+      display: block;
+      font-size: 12px;
+    }
+
+    .employment-department span {
+      display: block;
+      font-size: 10px;
+      color: #718096;
+      margin-top: 3px;
+    }
+
+    .employment-side-text {
+      font-size: 10px;
+      color: #64748b;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .employment-side-button {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+      padding: 9px;
+      border: 1px solid #b9c8da;
+      border-radius: 7px;
+      text-decoration: none;
+      color: #2365b5;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .employment-consent {
+      background: #f1faf5;
+      border-color: #d8eddf;
+    }
+
+    .employment-consent-badge {
+      display: inline-block;
+      background: #e1f4e8;
+      color: #16834b;
+      padding: 5px 9px;
+      border-radius: 14px;
+      font-size: 10px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .employment-consent p {
+      font-size: 10px;
+      color: #64748b;
+      line-height: 1.5;
+      margin: 0 0 13px;
+    }
+
+    .employment-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: white;
+      background: #2365b5;
+      padding: 10px 16px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .employment-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      background: white;
+      border: 1px solid #e1e7ef;
+      border-radius: 10px;
+      padding: 12px 16px;
+    }
+
+    .employment-security {
+      font-size: 10px;
+      color: #68778d;
+    }
+
+    @media (max-width: 900px) {
+      .employment-sidebar {
+        width: 190px;
+      }
+
+      .employment-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .employment-search {
+        width: 300px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .employment-dashboard {
+        display: block;
+      }
+
+      .employment-sidebar {
+        width: 100%;
+        min-height: auto;
+      }
+
+      .employment-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .employment-sidebar-bottom {
+        margin-top: 10px;
+      }
+
+      .employment-topbar {
+        padding: 0 15px;
+      }
+
+      .employment-content {
+        padding: 15px;
+      }
+
+      .employment-portal-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .employment-verified-box {
+        text-align: left;
+      }
+
+      .employment-search {
+        max-width: 60%;
+      }
+
+      .employment-data-row {
+        grid-template-columns: 1fr;
+        padding: 10px 0;
+        gap: 5px;
+      }
+
+      .employment-row-status {
+        width: fit-content;
+      }
+
+      .employment-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="employment-dashboard">
+
+    <aside class="employment-sidebar">
+
+      <div class="employment-brand">
+
+        <div class="employment-brand-icon">
+          🏛️
+        </div>
+
+        <div>
+          <h2>BharatSetu</h2>
+          <p>One Citizen. One Platform.</p>
+        </div>
+
+      </div>
+
+      <nav class="employment-nav">
+
+        <a href="/dashboard?nationalId=<%= citizen.nationalId %>">
+          🏠
+          Home
+        </a>
+
+        <a href="/dashboard?nationalId=<%= citizen.nationalId %>#government-portals" class="active">
+          🏛️
+          Government Portals
+        </a>
+
+        <a href="/services?nationalId=<%= citizen.nationalId %>">
+          📄
+          Services & Applications
+        </a>
+
+        <a href="/portal/applicationStatus?nationalId=<%= citizen.nationalId %>">
+          🕒
+          Application History
+        </a>
+
+        <a href="#">
+          ☑️
+          Eligibility Checker
+        </a>
+
+        <a href="#">
+          📁
+          Document Reuse
+        </a>
+
+        <a href="#">
+          🛡️
+          Consent Management
+        </a>
+
+        <a href="#">
+          🔍
+          Grievance Management
+        </a>
+
+        <a href="#">
+          🔔
+          Notifications
+        </a>
+
+      </nav>
+
+      <div class="employment-sidebar-bottom">
+
+        <a href="/login" class="employment-nav">
+          <span>🚪 Logout</span>
+        </a>
+
+      </div>
+
+    </aside>
+
+    <main class="employment-main">
+
+      <header class="employment-topbar">
+
+        <div class="employment-search">
+          🔍
+          <input
+            type="text"
+            placeholder="Search for services, schemes, certificates..."
+          >
+        </div>
+
+        <div class="employment-user">
+
+          <div class="employment-avatar">
+            👤
+          </div>
+
+          <div>
+
+            <strong>
+              <%= citizen.identity.fullName %>
+            </strong>
+
+            <small>
+              Citizen
+            </small>
+
+          </div>
+
+        </div>
+
+      </header>
+
+      <div class="employment-content">
+
+        <div class="employment-breadcrumb">
+          Home
+          <span>›</span>
+          Government Portals
+          <span>›</span>
+          Employment Exchange Board
+        </div>
+
+        <section class="employment-portal-header">
+
+          <div class="employment-title-area">
+
+            <div class="employment-title-icon">
+              💼
+            </div>
+
+            <div>
+
+              <h1>
+                Employment Exchange Board
+              </h1>
+
+              <p>
+                Verified citizen employment information
+              </p>
+
+            </div>
+
+          </div>
+
+          <div class="employment-verified-box">
+
+            <span class="employment-verified-badge">
+              ✓ Verified Government Data
+            </span>
+
+            <span class="employment-updated">
+              Securely retrieved from verified records
+            </span>
+
+          </div>
+
+        </section>
+
+        <div class="employment-layout">
+
+          <div>
+
+            <section class="employment-card">
+
+              <div class="employment-card-title">
+
+                <h2>
+                  Employment Information
+                </h2>
+
+                <span class="employment-mini-verified">
+                  ✓ Verified
+                </span>
+
+              </div>
+
+              <div class="employment-data-row">
+
+                <span class="employment-data-label">
+                  Employment Status
+                </span>
+
+                <strong class="employment-data-value">
+                  <%= citizen.employment.status || "Not Available" %>
+                </strong>
+
+                <span class="employment-row-status">
+                  ✓ Verified
+                </span>
+
+              </div>
+
+              <div class="employment-data-row">
+
+                <span class="employment-data-label">
+                  Employer Name
+                </span>
+
+                <strong class="employment-data-value">
+                  <%= citizen.employment.employerName || "Not Available" %>
+                </strong>
+
+                <span class="employment-row-status">
+                  ✓ Verified
+                </span>
+
+              </div>
+
+              <div class="employment-data-row">
+
+                <span class="employment-data-label">
+                  Occupation
+                </span>
+
+                <strong class="employment-data-value">
+                  <%= citizen.employment.occupation || "Not Available" %>
+                </strong>
+
+                <span class="employment-row-status">
+                  ✓ Verified
+                </span>
+
+              </div>
+
+              <div class="employment-info-box" style="margin-top: 15px;">
+
+                <div class="employment-info-icon">
+                  ℹ️
+                </div>
+
+                <div>
+                  This information has been retrieved from verified employment records and can be securely reused for eligible government services and schemes.
+                </div>
+
+              </div>
+
+            </section>
+
+            <section class="employment-card">
+
+              <div class="employment-card-title">
+
+                <h2>
+                  Citizen Verification
+                </h2>
+
+                <span class="employment-mini-verified">
+                  ✓ Verified
+                </span>
+
+              </div>
+
+              <div class="employment-data-row">
+
+                <span class="employment-data-label">
+                  Citizen Name
+                </span>
+
+                <strong class="employment-data-value">
+                  <%= citizen.identity.fullName || "Not Available" %>
+                </strong>
+
+                <span class="employment-row-status">
+                  ✓ Verified
+                </span>
+
+              </div>
+
+              <div class="employment-data-row">
+
+                <span class="employment-data-label">
+                  National ID
+                </span>
+
+                <strong class="employment-data-value">
+                  <%= citizen.nationalId || "Not Available" %>
+                </strong>
+
+                <span class="employment-row-status">
+                  ✓ Verified
+                </span>
+
+              </div>
+
+            </section>
+
+            <div class="employment-bottom">
+
+              <span class="employment-security">
+                🔐 Your verified information is protected and shared only with your consent.
+              </span>
+
+              <a
+                href="/dashboard?nationalId=<%= citizen.nationalId %>"
+                class="employment-back"
+              >
+                ← Back to Government Portals
+              </a>
+
+            </div>
+
+          </div>
+
+          <aside>
+
+            <section class="employment-card employment-side-card">
+
+              <h3>
+                Department Information
+              </h3>
+
+              <div class="employment-department">
+
+                <div class="employment-dept-icon">
+                  💼
+                </div>
+
+                <div>
+
+                  <strong>
+                    Employment Exchange Board
+                  </strong>
+
+                  <span>
+                    Government of India
+                  </span>
+
+                </div>
+
+              </div>
+
+              <p class="employment-side-text">
+                This department manages verified employment and occupation information used for eligible government services and employment-related schemes.
+              </p>
+
+              <a href="#" class="employment-side-button">
+                🌐 Visit Official Portal ↗
+              </a>
+
+            </section>
+
+            <section class="employment-card employment-side-card employment-consent">
+
+              <h3>
+                Data Sharing & Consent
+              </h3>
+
+              <span class="employment-consent-badge">
+                🛡️ Consent Controlled
+              </span>
+
+              <p>
+                Your employment information can be shared with eligible government services only according to your consent.
+              </p>
+
+              <a
+                href="/services?nationalId=<%= citizen.nationalId %>"
+                class="employment-side-button"
+              >
+                Manage Consent
+              </a>
+
+            </section>
+
+            <section class="employment-card employment-side-card">
+
+              <h3>
+                Need Help?
+              </h3>
+
+              <p class="employment-side-text">
+                Need assistance with your employment information or government services?
+              </p>
+
+              <a href="#" class="employment-side-button">
+                🎧 Raise a Support Request
+              </a>
+
+            </section>
+
+          </aside>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+</body>
+</html>

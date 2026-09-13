@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unified Scheme & Application Tracker</title>
+  <link rel="stylesheet" href="/style.css">
+
+  <style>
+    .application-dashboard {
+      min-height: 100vh;
+      background: #f3f6fb;
+      display: flex;
+      color: #172b4d;
+    }
+
+    .application-sidebar {
+      width: 230px;
+      background: #102f52;
+      color: white;
+      padding: 20px 14px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+
+    .application-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 8px 24px;
+    }
+
+    .application-brand-icon {
+      font-size: 30px;
+    }
+
+    .application-brand h2 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .application-brand p {
+      margin: 3px 0 0;
+      font-size: 11px;
+      opacity: 0.75;
+    }
+
+    .application-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .application-nav a {
+      color: white;
+      text-decoration: none;
+      padding: 11px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0.9;
+    }
+
+    .application-nav a:hover,
+    .application-nav a.active {
+      background: #1d5d99;
+      opacity: 1;
+    }
+
+    .application-sidebar-bottom {
+      margin-top: auto;
+    }
+
+    .application-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .application-topbar {
+      height: 64px;
+      background: white;
+      border-bottom: 1px solid #e3e8ef;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      box-sizing: border-box;
+    }
+
+    .application-search {
+      width: 420px;
+      max-width: 50%;
+      background: #f5f7fa;
+      border: 1px solid #e3e8ef;
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: #7b8798;
+      box-sizing: border-box;
+    }
+
+    .application-search input {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      font-size: 12px;
+    }
+
+    .application-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .application-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #e8f0fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .application-user strong {
+      display: block;
+      font-size: 13px;
+    }
+
+    .application-user small {
+      color: #7b8798;
+      font-size: 11px;
+    }
+
+    .application-content {
+      padding: 20px 28px 30px;
+    }
+
+    .application-breadcrumb {
+      font-size: 11px;
+      color: #7b8798;
+      margin-bottom: 16px;
+    }
+
+    .application-breadcrumb span {
+      margin: 0 5px;
+    }
+
+    .application-portal-header {
+      background: white;
+      border: 1px solid #e1e7ef;
+      border-radius: 12px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+
+    .application-title-area {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .application-title-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      background: #e9f3ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 27px;
+    }
+
+    .application-title-area h1 {
+      margin: 0 0 5px;
+      font-size: 20px;
+    }
+
+    .application-title-area p {
+      margin: 0;
+      font-size: 12px;
+      color: #6c7a8c;
+    }
+
+    .application-active-box {
+      text-align: right;
+    }
+
+    .application-active-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #e5f7ed;
+      color: #16834b;
+      padding: 7px 12px;
+      border-radius: 18px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .application-active-text {
+      display: block;
+      margin-top: 6px;
+      font-size: 10px;
+      color: #7b8798;
+    }
+
+    .application-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 16px;
+    }
+
+    .application-card {
+      background: white;
+      border: 1px solid #e1e7ef;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .application-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .application-card-header h2 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .application-count {
+      background: #eef5ff;
+      color: #2365b5;
+      padding: 5px 9px;
+      border-radius: 15px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .application-item {
+      border: 1px solid #e5eaf0;
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .application-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .application-item-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 14px;
+    }
+
+    .application-item-title h3 {
+      margin: 0 0 5px;
+      font-size: 14px;
+      color: #172b4d;
+    }
+
+    .application-item-title p {
+      margin: 0;
+      color: #7b8798;
+      font-size: 10px;
+    }
+
+    .application-status-badge {
+      padding: 6px 10px;
+      border-radius: 15px;
+      font-size: 10px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status-submitted {
+      background: #eef5ff;
+      color: #2365b5;
+    }
+
+    .status-verification,
+    .status-processing {
+      background: #fff5df;
+      color: #a86c00;
+    }
+
+    .status-approved {
+      background: #e5f7ed;
+      color: #16834b;
+    }
+
+    .status-rejected {
+      background: #fdeaea;
+      color: #c43d3d;
+    }
+
+    .status-action {
+      background: #fff0e1;
+      color: #bd6414;
+    }
+
+    .application-data-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .application-data-box {
+      background: #f7f9fc;
+      border-radius: 7px;
+      padding: 10px;
+    }
+
+    .application-data-label {
+      display: block;
+      color: #7b8798;
+      font-size: 9px;
+      margin-bottom: 4px;
+    }
+
+    .application-data-value {
+      display: block;
+      color: #1d2e46;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .application-remarks {
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: #eef6ff;
+      border: 1px solid #d7e9fb;
+      border-radius: 7px;
+      color: #526b86;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .application-empty {
+      padding: 35px 20px;
+      text-align: center;
+      background: #f8fafc;
+      border-radius: 9px;
+      color: #718096;
+      font-size: 12px;
+    }
+
+    .application-side-card h3 {
+      margin: 0 0 15px;
+      font-size: 14px;
+    }
+
+    .application-summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #edf0f4;
+    }
+
+    .application-summary-row:last-child {
+      border-bottom: none;
+    }
+
+    .application-summary-row span {
+      color: #718096;
+      font-size: 10px;
+    }
+
+    .application-summary-row strong {
+      font-size: 12px;
+      color: #1d2e46;
+    }
+
+    .application-info-box {
+      background: #eef6ff;
+      border: 1px solid #d7e9fb;
+      border-radius: 9px;
+      padding: 11px 13px;
+      display: flex;
+      gap: 9px;
+      color: #526b86;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .application-consent {
+      background: #f1faf5;
+      border-color: #d8eddf;
+    }
+
+    .application-consent-badge {
+      display: inline-block;
+      background: #e1f4e8;
+      color: #16834b;
+      padding: 5px 9px;
+      border-radius: 14px;
+      font-size: 10px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .application-consent p {
+      font-size: 10px;
+      color: #64748b;
+      line-height: 1.5;
+      margin: 0 0 13px;
+    }
+
+    .application-side-button {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+      padding: 9px;
+      border: 1px solid #b9c8da;
+      border-radius: 7px;
+      text-decoration: none;
+      color: #2365b5;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .application-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      background: white;
+      border: 1px solid #e1e7ef;
+      border-radius: 10px;
+      padding: 12px 16px;
+    }
+
+    .application-security {
+      font-size: 10px;
+      color: #68778d;
+    }
+
+    .application-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: white;
+      background: #2365b5;
+      padding: 10px 16px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    @media (max-width: 900px) {
+      .application-sidebar {
+        width: 190px;
+      }
+
+      .application-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .application-search {
+        width: 300px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .application-dashboard {
+        display: block;
+      }
+
+      .application-sidebar {
+        width: 100%;
+        min-height: auto;
+      }
+
+      .application-nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .application-sidebar-bottom {
+        margin-top: 10px;
+      }
+
+      .application-topbar {
+        padding: 0 15px;
+      }
+
+      .application-content {
+        padding: 15px;
+      }
+
+      .application-portal-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .application-active-box {
+        text-align: left;
+      }
+
+      .application-search {
+        max-width: 60%;
+      }
+
+      .application-data-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .application-item-header {
+        flex-direction: column;
+      }
+
+      .application-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="application-dashboard">
+
+    <aside class="application-sidebar">
+
+      <div class="application-brand">
+
+        <div class="application-brand-icon">
+          🏛️
+        </div>
+
+        <div>
+          <h2>BharatSetu</h2>
+          <p>One Citizen. One Platform.</p>
+        </div>
+
+      </div>
+
+      <nav class="application-nav">
+
+        <a href="/dashboard?nationalId=<%= citizen.nationalId %>">
+          🏠
+          Home
+        </a>
+
+        <a href="/dashboard?nationalId=<%= citizen.nationalId %>#government-portals">
+          🏛️
+          Government Portals
+        </a>
+
+        <a href="/services?nationalId=<%= citizen.nationalId %>">
+          📄
+          Services & Applications
+        </a>
+
+        <a href="/portal/applicationStatus?nationalId=<%= citizen.nationalId %>" class="active">
+          🕒
+          Application History
+        </a>
+
+        <a href="#">
+          ☑️
+          Eligibility Checker
+        </a>
+
+        <a href="#">
+          📁
+          Document Reuse
+        </a>
+
+        <a href="#">
+          🛡️
+          Consent Management
+        </a>
+
+        <a href="#">
+          🔍
+          Grievance Management
+        </a>
+
+        <a href="#">
+          🔔
+          Notifications
+        </a>
+
+      </nav>
+
+      <div class="application-sidebar-bottom">
+
+        <a href="/login" class="application-nav">
+          <span>🚪 Logout</span>
+        </a>
+
+      </div>
+
+    </aside>
+
+    <main class="application-main">
+
+      <header class="application-topbar">
+
+        <div class="application-search">
+          🔍
+          <input
+            type="text"
+            placeholder="Search for services, schemes, certificates..."
+          >
+        </div>
+
+        <div class="application-user">
+
+          <div class="application-avatar">
+            👤
+          </div>
+
+          <div>
+
+            <strong>
+              <%= citizen.identity.fullName %>
+            </strong>
+
+            <small>
+              Citizen
+            </small>
+
+          </div>
+
+        </div>
+
+      </header>
+
+      <div class="application-content">
+
+        <div class="application-breadcrumb">
+          Home
+          <span>›</span>
+          Application History
+        </div>
+
+        <section class="application-portal-header">
+
+          <div class="application-title-area">
+
+            <div class="application-title-icon">
+              🕒
+            </div>
+
+            <div>
+
+              <h1>
+                Unified Scheme & Application Tracker
+              </h1>
+
+              <p>
+                Track your government applications and service requests
+              </p>
+
+            </div>
+
+          </div>
+
+          <div class="application-active-box">
+
+            <span class="application-active-badge">
+              ● Application Tracking Active
+            </span>
+
+            <span class="application-active-text">
+              Real-time application records
+            </span>
+
+          </div>
+
+        </section>
+
+        <div class="application-layout">
+
+          <div>
+
+            <section class="application-card">
+
+              <div class="application-card-header">
+
+                <h2>
+                  Application Status
+                </h2>
+
+                <span class="application-count">
+                  <%= applications ? applications.length : 0 %> Applications
+                </span>
+
+              </div>
+
+              <% if (applications && applications.length > 0) { %>
+
+                <% applications.forEach(application => { %>
+
+                  <div class="application-item">
+
+                    <div class="application-item-header">
+
+                      <div class="application-item-title">
+
+                        <h3>
+                          <%= application.serviceName || "Government Application" %>
+                        </h3>
+
+                        <p>
+                          <%= application.department || "Government Department" %>
+                        </p>
+
+                      </div>
+
+                      <%
+                        let statusClass = "status-submitted";
+
+                        if (application.status === "Verification") {
+                          statusClass = "status-verification";
+                        }
+
+                        if (application.status === "Processing") {
+                          statusClass = "status-processing";
+                        }
+
+                        if (application.status === "Approved") {
+                          statusClass = "status-approved";
+                        }
+
+                        if (application.status === "Rejected") {
+                          statusClass = "status-rejected";
+                        }
+
+                        if (application.status === "Action Required") {
+                          statusClass = "status-action";
+                        }
+                      %>
+
+                      <span class="application-status-badge <%= statusClass %>">
+                        <%= application.status || "Submitted" %>
+                      </span>
+
+                    </div>
+
+                    <div class="application-data-grid">
+
+                      <div class="application-data-box">
+
+                        <span class="application-data-label">
+                          Application Number
+                        </span>
+
+                        <strong class="application-data-value">
+                          <%= application.applicationNumber || "Not Available" %>
+                        </strong>
+
+                      </div>
+
+                      <div class="application-data-box">
+
+                        <span class="application-data-label">
+                          Service Category
+                        </span>
+
+                        <strong class="application-data-value">
+                          <%= application.serviceType || "Not Available" %>
+                        </strong>
+
+                      </div>
+
+                      <div class="application-data-box">
+
+                        <span class="application-data-label">
+                          Department
+                        </span>
+
+                        <strong class="application-data-value">
+                          <%= application.department || "Not Available" %>
+                        </strong>
+
+                      </div>
+
+                      <div class="application-data-box">
+
+                        <span class="application-data-label">
+                          Applied Date
+                        </span>
+
+                        <strong class="application-data-value">
+                          <%= application.applicationDate ? new Date(application.applicationDate).toLocaleDateString() : "Not Available" %>
+                        </strong>
+
+                      </div>
+
+                    </div>
+
+                    <div class="application-remarks">
+                      <strong>Remarks:</strong>
+                      <%= application.remarks || "No remarks available." %>
+                    </div>
+
+                  </div>
+
+                <% }) %>
+
+              <% } else { %>
+
+                <div class="application-empty">
+                  <div style="font-size: 28px; margin-bottom: 8px;">
+                    📭
+                  </div>
+
+                  No applications found for this citizen.
+                </div>
+
+              <% } %>
+
+            </section>
+
+            <div class="application-bottom">
+
+              <span class="application-security">
+                🔐 Application information is securely retrieved from the unified government system.
+              </span>
+
+              <a
+                href="/dashboard?nationalId=<%= citizen.nationalId %>"
+                class="application-back"
+              >
+                ← Back to Dashboard
+              </a>
+
+            </div>
+
+          </div>
+
+          <aside>
+
+            <section class="application-card application-side-card">
+
+              <h3>
+                Application Summary
+              </h3>
+
+              <div class="application-summary-row">
+
+                <span>
+                  Total Applications
+                </span>
+
+                <strong>
+                  <%= applications ? applications.length : 0 %>
+                </strong>
+
+              </div>
+
+              <div class="application-summary-row">
+
+                <span>
+                  Approved
+                </span>
+
+                <strong>
+                  <%= applications ? applications.filter(app => app.status === "Approved").length : 0 %>
+                </strong>
+
+              </div>
+
+              <div class="application-summary-row">
+
+                <span>
+                  Processing
+                </span>
+
+                <strong>
+                  <%= applications ? applications.filter(app => app.status === "Processing" || app.status === "Verification").length : 0 %>
+                </strong>
+
+              </div>
+
+              <div class="application-summary-row">
+
+                <span>
+                  Action Required
+                </span>
+
+                <strong>
+                  <%= applications ? applications.filter(app => app.status === "Action Required").length : 0 %>
+                </strong>
+
+              </div>
+
+            </section>
+
+            <section class="application-card application-side-card">
+
+              <h3>
+                Tracking Information
+              </h3>
+
+              <div class="application-info-box">
+
+                <div>
+                  ℹ️
+                </div>
+
+                <div>
+                  Application status is retrieved from connected government departments through the unified BharatSetu platform.
+                </div>
+
+              </div>
+
+            </section>
+
+            <section class="application-card application-side-card application-consent">
+
+              <h3>
+                Data Sharing & Consent
+              </h3>
+
+              <span class="application-consent-badge">
+                🛡️ Consent Controlled
+              </span>
+
+              <p>
+                Application-related information is accessed securely and shared according to citizen consent.
+              </p>
+
+              <a
+                href="/services?nationalId=<%= citizen.nationalId %>"
+                class="application-side-button"
+              >
+                Manage Consent
+              </a>
+
+            </section>
+
+          </aside>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+</body>
+</html>

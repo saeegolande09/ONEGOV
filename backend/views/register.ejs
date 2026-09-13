@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account - Government Interoperability</title>
+  <link rel="stylesheet" href="/style.css">
+
+  <style>
+    .step-progress {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      width: 100%;
+      margin: 25px 0 30px;
+      padding: 0 8px;
+    }
+
+    .step-progress::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 25px;
+      right: 25px;
+      height: 3px;
+      background: #dbe3f0;
+      transform: translateY(-50%);
+      z-index: 0;
+    }
+
+    .progress-line {
+      position: absolute;
+      top: 50%;
+      left: 25px;
+      right: 25px;
+      height: 3px;
+      transform: translateY(-50%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    #progressBar {
+      height: 3px;
+      width: 0;
+      background: #2864e8;
+      transition: width 0.3s ease;
+    }
+
+    .step-indicator {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #eef3fb;
+      color: #5f6f86;
+      border: 2px solid #dbe3f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      position: relative;
+      z-index: 2;
+      transition: all 0.3s ease;
+    }
+
+    .step-indicator.active,
+    .step-indicator.completed {
+      background: #2864e8;
+      color: #ffffff;
+      border-color: #2864e8;
+    }
+
+    .step-section {
+      display: none !important;
+    }
+
+    .step-section.active-step {
+      display: block !important;
+    }
+
+    .step-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .step-actions button {
+      flex: 1;
+    }
+
+    @media (max-width: 600px) {
+      .step-progress {
+        padding: 0 4px;
+      }
+
+      .step-progress::before {
+        left: 18px;
+        right: 18px;
+      }
+
+      .progress-line {
+        left: 18px;
+        right: 18px;
+      }
+
+      .step-indicator {
+        width: 26px;
+        height: 26px;
+        font-size: 10px;
+      }
+
+      .step-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body class="register-page">
+
+  <div class="register-container">
+
+    <div class="register-header">
+      <div class="register-logo">🏛️</div>
+      <h1>Create Account</h1>
+      <p>Register for Government Interoperability Services</p>
+    </div>
+
+    <% if (error) { %>
+      <div class="register-error">
+        <%= error %>
+      </div>
+    <% } %>
+
+    <% if (success) { %>
+      <div class="register-success">
+        <%= success %>
+      </div>
+    <% } %>
+
+    <div class="step-progress">
+
+      <div class="progress-line">
+        <div id="progressBar"></div>
+      </div>
+
+      <div class="step-indicator" data-step="1">1</div>
+      <div class="step-indicator" data-step="2">2</div>
+      <div class="step-indicator" data-step="3">3</div>
+      <div class="step-indicator" data-step="4">4</div>
+      <div class="step-indicator" data-step="5">5</div>
+      <div class="step-indicator" data-step="6">6</div>
+      <div class="step-indicator" data-step="7">7</div>
+      <div class="step-indicator" data-step="8">8</div>
+      <div class="step-indicator" data-step="9">9</div>
+      <div class="step-indicator" data-step="10">10</div>
+
+    </div>
+
+    <input
+      type="hidden"
+      id="initialStep"
+      value="<%= typeof currentStep !== 'undefined' ? currentStep : 1 %>"
+    >
+
+    <form
+      action="/register"
+      method="POST"
+      class="register-form"
+      id="registerForm"
+    >
+
+      <div class="form-section step-section" data-step="1">
+
+        <div class="section-title">
+          <span>01</span>
+          <div>
+            <h2>Identity Information</h2>
+            <p>Enter your basic identity details</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input
+              type="text"
+              id="fullName"
+              name="fullName"
+              value="<%= formData?.fullName || '' %>"
+              placeholder="Enter your full name"
+              pattern="[A-Za-z ]+"
+              title="Name can contain only letters and spaces"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="dob">Date of Birth</label>
+            <input
+              type="date"
+              id="dob"
+              name="dob"
+              value="<%= formData?.dob || '' %>"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" required>
+              <option value="">Select Gender</option>
+              <option value="Male" <%= formData?.gender === 'Male' ? 'selected' : '' %>>Male</option>
+              <option value="Female" <%= formData?.gender === 'Female' ? 'selected' : '' %>>Female</option>
+              <option value="Other" <%= formData?.gender === 'Other' ? 'selected' : '' %>>Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="fatherName">Father's Name</label>
+            <input
+              type="text"
+              id="fatherName"
+              name="fatherName"
+              value="<%= formData?.fatherName || '' %>"
+              placeholder="Enter father's name"
+              pattern="[A-Za-z ]+"
+              title="Name can contain only letters and spaces"
+              required
+            >
+          </div>
+
+          <div class="form-group full-width">
+            <label for="address">Address</label>
+            <textarea
+              id="address"
+              name="address"
+              placeholder="Enter your full address"
+              required
+            ><%= formData?.address || '' %></textarea>
+          </div>
+
+        </div>
+
+        <div class="step-actions">
+          <button type="button" class="next-btn" onclick="nextStep()">
+            Proceed →
+          </button>
+        </div>
+
+      </div>
+
+
+      <div class="form-section step-section" data-step="2">
+
+        <div class="section-title">
+          <span>02</span>
+          <div>
+            <h2>Income Information</h2>
+            <p>Provide your income details</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label for="annualIncome">Annual Income</label>
+            <input
+              type="number"
+              id="annualIncome"
+              name="annualIncome"
+              value="<%= formData?.annualIncome || '' %>"
+              min="0"
+              placeholder="Enter annual income"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="incomeCategory">Income Category</label>
+            <select
+              id="incomeCategory"
+              name="incomeCategory"
+              required
+            >
+              <option value="">Select Category</option>
+              <option value="Low Income" <%= formData?.incomeCategory === 'Low Income' ? 'selected' : '' %>>
+                Low Income
+              </option>
+              <option value="Middle Income" <%= formData?.incomeCategory === 'Middle Income' ? 'selected' : '' %>>
+                Middle Income
+              </option>
+              <option value="High Income" <%= formData?.incomeCategory === 'High Income' ? 'selected' : '' %>>
+                High Income
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="sourceOfIncome">Source of Income</label>
+            <select
+              id="sourceOfIncome"
+              name="sourceOfIncome"
+              required
+            >
+              <option value="">Select Source</option>
+              <option value="Government Job" <%= formData?.sourceOfIncome === 'Government Job' ? 'selected' : '' %>>
+                Government Job
+              </option>
+              <option value="Private Job" <%= formData?.sourceOfIncome === 'Private Job' ? 'selected' : '' %>>
+                Private Job
+              </option>
+              <option value="Business" <%= formData?.sourceOfIncome === 'Business' ? 'selected' : '' %>>
+                Business
+              </option>
+              <option value="Agriculture" <%= formData?.sourceOfIncome === 'Agriculture' ? 'selected' : '' %>>
+                Agriculture
+              </option>
+              <option value="Self Employed" <%= formData?.sourceOfIncome === 'Self Employed' ? 'selected' : '' %>>
+                Self Employed
+              </option>
+              <option value="Other" <%= formData?.sourceOfIncome === 'Other' ? 'selected' : '' %>>
+                Other
+              </option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="step-actions">
+          <button type="button" class="back-btn" onclick="previousStep()">
+            ← Back
+          </button>
+
+          <button type="button" class="next-btn" onclick="nextStep()">
+            Proceed →
+          </button>
+        </div>
+
+      </div>
+
+
+      <div class="form-section step-section" data-step="3">
+
+        <div class="section-title">
+          <span>03</span>
+          <div>
+            <h2>Education Information</h2>
+            <p>Enter your educational qualification</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label for="degree">Degree</label>
+
+            <select id="degree" name="degree" required>
+
+              <option value="">Select Degree</option>
+
+              <option value="10th" <%= formData?.degree === '10th' ? 'selected' : '' %>>
+                10th
+              </option>
+
+              <option value="12th" <%= formData?.degree === '12th' ? 'selected' : '' %>>
+                12th
+              </option>
+
+              <option value="Diploma" <%= formData?.degree === 'Diploma' ? 'selected' : '' %>>
+                Diploma
+              </option>
+
+              <option value="B.Tech" <%= formData?.degree === 'B.Tech' ? 'selected' : '' %>>
+                B.Tech
+              </option>
+
+              <option value="B.E." <%= formData?.degree === 'B.E.' ? 'selected' : '' %>>
+                B.E.
+              </option>
+
+              <option value="B.Sc" <%= formData?.degree === 'B.Sc' ? 'selected' : '' %>>
+                B.Sc
+              </option>
+
+              <option value="B.Com" <%= formData?.degree === 'B.Com' ? 'selected' : '' %>>
+                B.Com
+              </option>
+
+              <option value="B.A." <%= formData?.degree === 'B.A.' ? 'selected' : '' %>>
+                B.A.
+              </option>
+
+              <option value="M.Tech" <%= formData?.degree === 'M.Tech' ? 'selected' : '' %>>
+                M.Tech
+              </option>
+
+              <option value="M.Sc" <%= formData?.degree === 'M.Sc' ? 'selected' : '' %>>
+                M.Sc
+              </option>
+
+              <option value="M.Com" <%= formData?.degree === 'M.Com' ? 'selected' : '' %>>
+                M.Com
+              </option>
+
+              <option value="M.A." <%= formData?.degree === 'M.A.' ? 'selected' : '' %>>
+                M.A.
+              </option>
+
+              <option value="Other" <%= formData?.degree === 'Other' ? 'selected' : '' %>>
+                Other
+              </option>
+
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="institution">Institution</label>
+
+            <input
+              type="text"
+              id="institution"
+              name="institution"
+              value="<%= formData?.institution || '' %>"
+              placeholder="Enter institution name"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="passingYear">Passing Year</label>
+
+            <input
+              type="number"
+              id="passingYear"
+              name="passingYear"
+              value="<%= formData?.passingYear || '' %>"
+              min="1950"
+              max="2100"
+              placeholder="e.g. 2024"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="gradeOrPercentage">Grade / Percentage</label>
+
+            <input
+              type="text"
+              id="gradeOrPercentage"
+              name="gradeOrPercentage"
+              value="<%= formData?.gradeOrPercentage || '' %>"
+              placeholder="e.g. 8.4 CGPA or 84%"
+              required
+            >
+          </div>
+
+        </div>
+
+        <div class="step-actions">
+
+          <button
+            type="button"
+            class="back-btn"
+            onclick="previousStep()"
+          >
+            ← Back
+          </button>
+
+          <button
+            type="button"
+            class="next-btn"
+            onclick="nextStep()"
+          >
+            Proceed →
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-section step-section" data-step="4">
+
+        <div class="section-title">
+
+          <span>04</span>
+
+          <div>
+            <h2>Health Information</h2>
+            <p>Provide your health-related information</p>
+          </div>
+
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label for="bloodGroup">
+              Blood Group
+            </label>
+
+            <select
+              id="bloodGroup"
+              name="bloodGroup"
+              required
+            >
+
+              <option value="">
+                Select Blood Group
+              </option>
+
+              <option value="A+" <%= formData?.bloodGroup === 'A+' ? 'selected' : '' %>>
+                A+
+              </option>
+
+              <option value="A-" <%= formData?.bloodGroup === 'A-' ? 'selected' : '' %>>
+                A-
+              </option>
+
+              <option value="B+" <%= formData?.bloodGroup === 'B+' ? 'selected' : '' %>>
+                B+
+              </option>
+
+              <option value="B-" <%= formData?.bloodGroup === 'B-' ? 'selected' : '' %>>
+                B-
+              </option>
+
+              <option value="AB+" <%= formData?.bloodGroup === 'AB+' ? 'selected' : '' %>>
+                AB+
+              </option>
+
+              <option value="AB-" <%= formData?.bloodGroup === 'AB-' ? 'selected' : '' %>>
+                AB-
+              </option>
+
+              <option value="O+" <%= formData?.bloodGroup === 'O+' ? 'selected' : '' %>>
+                O+
+              </option>
+
+              <option value="O-" <%= formData?.bloodGroup === 'O-' ? 'selected' : '' %>>
+                O-
+              </option>
+
+            </select>
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="disabilityStatus">
+              Disability Status
+            </label>
+
+            <select
+              id="disabilityStatus"
+              name="disabilityStatus"
+              required
+            >
+
+              <option
+                value="false"
+                <%= formData?.disabilityStatus !== 'true' ? 'selected' : '' %>
+              >
+                No
+              </option>
+
+              <option
+                value="true"
+                <%= formData?.disabilityStatus === 'true' ? 'selected' : '' %>
+              >
+                Yes
+              </option>
+
+            </select>
+
+          </div>
+
+          <div class="form-group full-width">
+
+            <label for="healthInsuranceId">
+              Health Insurance ID
+            </label>
+
+            <input
+              type="text"
+              id="healthInsuranceId"
+              name="healthInsuranceId"
+              value="<%= formData?.healthInsuranceId || '' %>"
+              placeholder="Enter health insurance ID"
+            >
+
+          </div>
+
+        </div>
+
+        <div class="step-actions">
+
+          <button
+            type="button"
+            class="back-btn"
+            onclick="previousStep()"
+          >
+            ← Back
+          </button>
+
+          <button
+            type="button"
+            class="next-btn"
+            onclick="nextStep()"
+          >
+            Proceed →
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-section step-section" data-step="5">
+
+        <div class="section-title">
+
+          <span>05</span>
+
+          <div>
+            <h2>Caste Information</h2>
+            <p>Enter caste and certificate details</p>
+          </div>
+
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label for="category">
+              Category
+            </label>
+
+            <select
+              id="category"
+              name="category"
+              required
+              onchange="toggleCertificate()"
+            >
+
+              <option value="">
+                Select Category
+              </option>
+
+              <option value="General" <%= formData?.category === 'General' ? 'selected' : '' %>>
+                General
+              </option>
+
+              <option value="OBC" <%= formData?.category === 'OBC' ? 'selected' : '' %>>
+                OBC
+              </option>
+
+              <option value="SC" <%= formData?.category === 'SC' ? 'selected' : '' %>>
+                SC
+              </option>
+
+              <option value="ST" <%= formData?.category === 'ST' ? 'selected' : '' %>>
+                ST
+              </option>
+
+              <option value="EWS" <%= formData?.category === 'EWS' ? 'selected' : '' %>>
+                EWS
+              </option>
+
+            </select>
+
+          </div>
+
+          <div
+            class="form-group"
+            id="certificateGroup"
+          >
+
+            <label for="certificateNumber">
+              Certificate Number
+            </label>
+
+            <input
+              type="text"
+              id="certificateNumber"
+              name="certificateNumber"
+              value="<%= formData?.certificateNumber || '' %>"
+              placeholder="Enter certificate number"
+            >
+
+          </div>
+
+        </div>
+
+        <div class="step-actions">
+
+          <button
+            type="button"
+            class="back-btn"
+            onclick="previousStep()"
+          >
+            ← Back
+          </button>
+
+          <button
+            type="button"
+            class="next-btn"
+            onclick="nextStep()"
+          >
+            Proceed →
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-section step-section" data-step="6">
+
+        <div class="section-title">
+
+          <span>06</span>
+
+          <div>
+            <h2>Driving License Information</h2>
+            <p>Enter your driving license details</p>
+          </div>
+
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label for="licenseNumber">
+              License Number
+            </label>
+
+            <input
+              type="text"
+              id="licenseNumber"
+              name="licenseNumber"
+              value="<%= formData?.licenseNumber || '' %>"
+              placeholder="Enter license number"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="expiryDate">
+              Expiry Date
+            </label>
+
+            <input
+              type="date"
+              id="expiryDate"
+              name="expiryDate"
+              value="<%= formData?.expiryDate || '' %>"
+            >
+
+          </div>
+
+        </div>
+
+        <div class="step-actions">
+
+          <button
+            type="button"
+            class="back-btn"
+            onclick="previousStep()"
+          >
+            ← Back
+          </button>
+
+          <button
+            type="button"
+            class="next-btn"
+            onclick="nextStep()"
+          >
+            Proceed →
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-section step-section" data-step="7">
+
+        <div class="section-title">
+
+          <span>07</span>
+
+          <div>
+            <h2>Land Information</h2>
+            <p>Enter your land record details</p>
+          </div>
+
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label for="surveyNumber">
+              Survey Number
+            </label>
+
+            <input
+              type="text"
+              id="surveyNumber"
+              name="surveyNumber"
+              value="<%= formData?.surveyNumber || '' %>"
+              placeholder="Enter survey number"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="areaInAcres">
+              Area in Acres
+            </label>
+
+            <input
+              type="number"
+              step="0.01"
+              id="areaInAcres"
+              name="areaInAcres"
+              value="<%= formData?.areaInAcres || '' %>"
+              min="0"
+              placeholder="e.g. 0.25"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="district">
+              District
+            </label>
+
+            <input
+              type="text"
+              id="district"
+              name="district"
+              value="<%= formData?.district || '' %>"
+              placeholder="Enter district"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="state">
+              State
+            </label>
+
+            <select id="state" name="state">
+
+              <option value="">
+                Select State
+              </option>
+
+              <option value="Maharashtra" <%= formData?.state === 'Maharashtra' ? 'selected' : '' %>>
+                Maharashtra
+              </option>
+
+              <option value="Gujarat" <%= formData?.state === 'Gujarat' ? 'selected' : '' %>>
+                Gujarat
+              </option>
+
+              <option value="Madhya Pradesh" <%= formData?.state === 'Madhya Pradesh' ? 'selected' : '' %>>
+                Madhya Pradesh
+              </option>
+
+              <option value="Goa" <%= formData?.state === 'Goa' ? 'selected' : '' %>>
+                Goa
+              </option>
+
+              <option value="Karnataka" <%= formData?.state === 'Karnataka' ? 'selected' : '' %>>
+                Karnataka
+              </option>
+
+              <option value="Rajasthan" <%= formData?.state === 'Rajasthan' ? 'selected' : '' %>>
+                Rajasthan
+              </option>
+
+              <option value="Delhi" <%= formData?.state === 'Delhi' ? 'selected' : '' %>>
+                Delhi
+              </option>
+
+              <option value="Uttar Pradesh" <%= formData?.state === 'Uttar Pradesh' ? 'selected' : '' %>>
+                Uttar Pradesh
+              </option>
+
+              <option value="Other" <%= formData?.state === 'Other' ? 'selected' : '' %>>
+                Other
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+        <div class="step-actions">
+
+          <button
+            type="button"
+            class="back-btn"
+            onclick="previousStep()"
+          >
+            ← Back
+          </button>
+
+          <button
+            type="button"
+            class="next-btn"
+            onclick="nextStep()"
+          >
+            Proceed →
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-section step-section" data-step="8">
+
+        <div class="section-title">
+
+          <span>08</span>
+
+          <div>
+            <h2>Business & Tax Information</h2>
+            <p>Enter your business and tax details</p>
+          </div>
+
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label for="panNumber">
+              PAN Number
+            </label>
+
+            <input
+              type="text"
+              id="panNumber"
+              name="panNumber"
+              value="<%= formData?.panNumber || '' %>"
+              placeholder="ABCDE1234F"
+              pattern="[A-Za-z]{5}[0-9]{4}[A-Za-z]{1}"
+              title="Enter a valid PAN format"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="gstin">
+              GSTIN
+            </label>
+
+            <input
+              type="text"
+              id="gstin"
+              name="gstin"
+              value="<%= formData?.gstin || '' %>"
+              placeholder="Enter GSTIN"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="businessName">
+              Business Name
+            </label>
+
+            <input
+              type="text"
+              id="businessName"
+              name="businessName"
+              value="<%= formData?.businessName || '' %>"
+              placeholder="Enter business name"
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="taxFilingStatus">
+              Tax Filing Status
+            </label>
+
+            <select
+              id="taxFilingStatus"
+              name="taxFilingStatus"
+            >
+
+              <option value="">
+                Select Status
+              </option>
+
+              <option value="Filed" <%= formData?.taxFilingStatus === 'Filed' ? 'selected' : '' %>>
+                Filed
+              </option>
+
+              <option value="Not Filed" <%= formData?.taxFilingStatus === 'Not Filed' ? 'selected' : '' %>>
+                Not Filed
+              </option>
+
+              <option value="Not Applicable" <%= formData?.taxFilingStatus === 'Not Applicable' ? 'selected' : '' %>>
+                Not Applicable
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+        <div class="step-actions">
+
+          <button
+            type="button"
+            class="back-btn"
+            onclick="previousStep()"
+          >
+            ← Back
+          </button>
+
+          <button
+            type="button"
+            class="next-btn"
+            onclick="nextStep()"
+          >
+            Proceed →
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-section step-section" data-step="9">
+
+        <div class="section-title">
+
+          <span>09</span>
+
+          <div>
+            <h2>Employment Information</h2>
+            <p>Enter your employment details</p>
+          </div>
+
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label for="employmentStatus">
+              Employment Status
+            </label>
+
+            <select
+              id="employmentStatus"
+              name="employmentStatus"
+              required
+              onchange="toggleEmploymentFields()"
+            >
+
+              <option value="">
+                Select Status
+              </option>
+
+              <option value="Employed" <%= formData?.employmentStatus === 'Employed' ? 'selected' : '' %>>
+                Employed
+              </option>
+
+              <option value="Self Employed" <%= formData?.employmentStatus === 'Self Employed' ? 'selected' : '' %>>
+                Self Employed
+              </option>
+
+              <option value="Unemployed" <%= formData?.employmentStatus === 'Unemployed' ? 'selected' : '' %>>
+                Unemployed
+              </option>
+
+              <option value="Student" <%= formData?.employmentStatus === 'Student' ? 'selected' : '' %>>
+                Student
+              </option>
+
+            </select>
+
+          </div>
+
+          <div
+            class="form-group"
+            id="employerGroup"
+          >
+
+            <label for="employerName">
+              Employer Name
+            </label>
+
+            <input
+              type="text"
+              id="employerName"
+              name="employerName"
+              value="<%= formData?.employerName || '' %>"
+              placeholder="Enter employer name"
+            >
+
+          </div>
+
+          <div
+            class="form-group"
+            id="occupationGroup"
+          >
+
+            <label for="occupation">
+              Occupation
+            </label>
+
+            <input
+              type="text"
+              id="occupation"
+              name="occupation"
+              value="<%= formData?.occupation || '' %>"
+              placeholder="Enter occupation"
+            >
+
+          </div>
+
+        </div>
+
+        <div class="step-actions">
+
+          <button
+            type="button"
+            class="back-btn"
+            onclick="previousStep()"
+          >
+            ← Back
+          </button>
+
+          <button
+            type="button"
+            class="next-btn"
+            onclick="nextStep()"
+          >
+            Proceed →
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-section step-section" data-step="10">
+
+        <div class="section-title">
+
+          <span>10</span>
+
+          <div>
+            <h2>Account Information</h2>
+            <p>Create your login credentials</p>
+          </div>
+
+        </div>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+
+            <label for="email">
+              Email
+            </label>
+
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value="<%= formData?.email || '' %>"
+              placeholder="Enter your email"
+              required
+            >
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="mobile">
+              Mobile Number
+            </label>
+
+            <input
+              type="text"
+              id="mobile"
+              name="mobile"
+              value="<%= formData?.mobile || '' %>"
+              placeholder="Enter 10 digit mobile number"
+              pattern="[0-9]{10}"
+              maxlength="10"
+              inputmode="numeric"
+              title="Mobile number must contain exactly 10 digits"
+              required
+            >
+
+          </div>
+
+          <div class="form-group full-width">
+
+            <label for="password">
+              Password
+            </label>
+
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Create a password"
+              minlength="8"
+              required
+            >
+
+          </div>
+
+        </div>
+
+        <div class="step-actions">
+
+          <button
+            type="button"
+            class="back-btn"
+            onclick="previousStep()"
+          >
+            ← Back
+          </button>
+
+          <button
+            type="submit"
+            class="register-btn"
+          >
+            Create Government Account
+          </button>
+
+        </div>
+
+      </div>
+
+    </form>
+
+    <div class="register-footer">
+
+      <p>
+        Already have an account?
+        <a href="/login">
+          Login
+        </a>
+      </p>
+
+      <span>
+        🔒 Secure Government Service Registration
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    let currentStep = Number(
+      document.getElementById("initialStep").value
+    );
+
+    const totalSteps = 10;
+
+    const steps =
+      document.querySelectorAll(".step-section");
+
+    const indicators =
+      document.querySelectorAll(".step-indicator");
+
+    const progressBar =
+      document.getElementById("progressBar");
+
+    const form =
+      document.getElementById("registerForm");
+
+
+    function showStep(step) {
+
+      steps.forEach(section => {
+        section.classList.remove("active-step");
+      });
+
+      const currentSection =
+        document.querySelector(
+          `.step-section[data-step="${step}"]`
+        );
+
+      if (currentSection) {
+        currentSection.classList.add("active-step");
+      }
+
+      indicators.forEach(indicator => {
+
+        const indicatorStep =
+          Number(indicator.dataset.step);
+
+        indicator.classList.remove(
+          "active",
+          "completed"
+        );
+
+        if (indicatorStep === step) {
+          indicator.classList.add("active");
+        }
+
+        if (indicatorStep < step) {
+          indicator.classList.add("completed");
+        }
+
+      });
+
+      const progress =
+        ((step - 1) / (totalSteps - 1)) * 100;
+
+      progressBar.style.width =
+        `${progress}%`;
+
+      currentStep = step;
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+    }
+
+
+    function validateCurrentStep() {
+
+      const currentSection =
+        document.querySelector(
+          `.step-section[data-step="${currentStep}"]`
+        );
+
+      if (!currentSection) {
+        return true;
+      }
+
+      const fields =
+        currentSection.querySelectorAll(
+          "input, select, textarea"
+        );
+
+      for (const field of fields) {
+
+        if (field.offsetParent === null) {
+          continue;
+        }
+
+        if (!field.checkValidity()) {
+
+          field.reportValidity();
+
+          return false;
+
+        }
+
+      }
+
+
+      if (currentStep === 1) {
+
+        const dob =
+          document.getElementById("dob").value;
+
+        if (dob) {
+
+          const selectedDate =
+            new Date(dob);
+
+          const today =
+            new Date();
+
+          today.setHours(
+            0,
+            0,
+            0,
+            0
+          );
+
+          if (selectedDate > today) {
+
+            alert(
+              "Date of Birth cannot be a future date."
+            );
+
+            return false;
+
+          }
+
+        }
+
+      }
+
+
+      if (currentStep === 3) {
+
+        const passingYear =
+          Number(
+            document.getElementById(
+              "passingYear"
+            ).value
+          );
+
+        const currentYear =
+          new Date().getFullYear();
+
+        if (passingYear > currentYear) {
+
+          alert(
+            "Passing Year cannot be in the future."
+          );
+
+          return false;
+
+        }
+
+      }
+
+
+      if (currentStep === 5) {
+
+        const category =
+          document.getElementById(
+            "category"
+          ).value;
+
+        const certificateNumber =
+          document.getElementById(
+            "certificateNumber"
+          );
+
+        if (
+          category !== "General" &&
+          !certificateNumber.value.trim()
+        ) {
+
+          alert(
+            "Please enter your certificate number."
+          );
+
+          certificateNumber.focus();
+
+          return false;
+
+        }
+
+      }
+
+      return true;
+
+    }
+
+
+    function nextStep() {
+
+      if (!validateCurrentStep()) {
+        return;
+      }
+
+      if (currentStep < totalSteps) {
+
+        showStep(
+          currentStep + 1
+        );
+
+      }
+
+    }
+
+
+    function previousStep() {
+
+      if (currentStep > 1) {
+
+        showStep(
+          currentStep - 1
+        );
+
+      }
+
+    }
+
+
+    function toggleCertificate() {
+
+      const category =
+        document.getElementById(
+          "category"
+        ).value;
+
+      const certificateGroup =
+        document.getElementById(
+          "certificateGroup"
+        );
+
+      const certificateNumber =
+        document.getElementById(
+          "certificateNumber"
+        );
+
+
+      if (category === "General") {
+
+        certificateGroup.style.display =
+          "none";
+
+        certificateNumber.required =
+          false;
+
+      } else {
+
+        certificateGroup.style.display =
+          "block";
+
+        certificateNumber.required =
+          category !== "";
+
+      }
+
+    }
+
+
+    function toggleEmploymentFields() {
+
+      const status =
+        document.getElementById(
+          "employmentStatus"
+        ).value;
+
+      const employerGroup =
+        document.getElementById(
+          "employerGroup"
+        );
+
+      const occupationGroup =
+        document.getElementById(
+          "occupationGroup"
+        );
+
+      const employerName =
+        document.getElementById(
+          "employerName"
+        );
+
+      const occupation =
+        document.getElementById(
+          "occupation"
+        );
+
+
+      if (status === "Employed") {
+
+        employerGroup.style.display =
+          "block";
+
+        occupationGroup.style.display =
+          "block";
+
+        employerName.required =
+          true;
+
+        occupation.required =
+          true;
+
+      } else if (
+        status === "Self Employed"
+      ) {
+
+        employerGroup.style.display =
+          "none";
+
+        occupationGroup.style.display =
+          "block";
+
+        employerName.required =
+          false;
+
+        occupation.required =
+          true;
+
+      } else {
+
+        employerGroup.style.display =
+          "none";
+
+        occupationGroup.style.display =
+          "none";
+
+        employerName.required =
+          false;
+
+        occupation.required =
+          false;
+
+      }
+
+    }
+
+
+    document
+      .getElementById("fullName")
+      .addEventListener(
+        "input",
+        function() {
+
+          this.value =
+            this.value.replace(
+              /[^A-Za-z ]/g,
+              ""
+            );
+
+        }
+      );
+
+
+    document
+      .getElementById("fatherName")
+      .addEventListener(
+        "input",
+        function() {
+
+          this.value =
+            this.value.replace(
+              /[^A-Za-z ]/g,
+              ""
+            );
+
+        }
+      );
+
+
+    document
+      .getElementById("mobile")
+      .addEventListener(
+        "input",
+        function() {
+
+          this.value =
+            this.value
+              .replace(/\D/g, "")
+              .slice(0, 10);
+
+        }
+      );
+
+
+    document
+      .getElementById("panNumber")
+      .addEventListener(
+        "input",
+        function() {
+
+          this.value =
+            this.value
+              .toUpperCase()
+              .replace(
+                /[^A-Z0-9]/g,
+                ""
+              )
+              .slice(0, 10);
+
+        }
+      );
+
+
+    document
+      .getElementById("gstin")
+      .addEventListener(
+        "input",
+        function() {
+
+          this.value =
+            this.value
+              .toUpperCase()
+              .replace(
+                /[^A-Z0-9]/g,
+                ""
+              )
+              .slice(0, 15);
+
+        }
+      );
+
+
+    document
+      .getElementById("annualIncome")
+      .addEventListener(
+        "input",
+        function() {
+
+          if (Number(this.value) < 0) {
+            this.value = 0;
+          }
+
+        }
+      );
+
+
+    document
+      .getElementById("areaInAcres")
+      .addEventListener(
+        "input",
+        function() {
+
+          if (Number(this.value) < 0) {
+            this.value = "";
+          }
+
+        }
+      );
+
+
+    document.getElementById("dob").max =
+      new Date()
+        .toISOString()
+        .split("T")[0];
+
+
+    document.getElementById("expiryDate").min =
+      new Date()
+        .toISOString()
+        .split("T")[0];
+
+
+    form.addEventListener(
+      "submit",
+      function(event) {
+
+        if (!validateCurrentStep()) {
+
+          event.preventDefault();
+
+          return;
+
+        }
+
+        const password =
+          document.getElementById(
+            "password"
+          ).value;
+
+        if (password.length < 8) {
+
+          event.preventDefault();
+
+          alert(
+            "Password must contain at least 8 characters."
+          );
+
+          return;
+
+        }
+
+      }
+    );
+
+
+    toggleCertificate();
+
+    toggleEmploymentFields();
+
+    showStep(
+      currentStep
+    );
+
+  </script>
+
+</body>
+</html>
