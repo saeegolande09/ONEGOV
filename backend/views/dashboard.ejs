@@ -523,7 +523,7 @@
         class="nav-item active"
       >
         🏠
-        <span>Home</span>
+        <span><%= __('home') %></span>
       </a>
 
       <a
@@ -531,7 +531,7 @@
         class="nav-item"
       >
         🏛️
-        <span>Government Portals</span>
+        <span><%= __('portals') %></span>
       </a>
 
       <a
@@ -539,7 +539,7 @@
         class="nav-item"
       >
         💼
-        <span>Services & Applications</span>
+        <span><%= __('services') %></span>
       </a>
 
       <a
@@ -547,32 +547,32 @@
         class="nav-item"
       >
         🕒
-        <span>Application History</span>
+        <span><%= __('history') %></span>
       </a>
 
       <a href="#" class="nav-item">
         ☑️
-        <span>Eligibility Checker</span>
+        <span><%= __('checker') %></span>
       </a>
 
       <a href="#" class="nav-item">
         📄
-        <span>Document Reuse</span>
+        <span><%= __('document') %></span>
       </a>
 
       <a href="#" class="nav-item">
         🛡️
-        <span>Consent Management</span>
+        <span><%= __('consent') %></span>
       </a>
 
       <a href="#" class="nav-item">
         🔍
-        <span>Grievance Management</span>
+        <span><%= __('grievance') %></span>
       </a>
 
       <a href="#" class="nav-item">
         🔔
-        <span>Notifications</span>
+        <span><%= __('notifications') %></span>
       </a>
 
       <a href="#" class="nav-item">
@@ -582,7 +582,7 @@
 
       <a href="#" class="nav-item">
         📋
-        <span>Audit Logs</span>
+        <span><%= __('logs') %></span>
       </a>
 
       <a href="#" class="nav-item">
@@ -617,9 +617,19 @@
 
         <input
           type="text"
-          placeholder="Search for services, schemes, certificates..."
+          id="dashboardSearch"
+          placeholder="<%= __('search_placeholder') %>"
+          autocomplete="off"
         >
+
       </div>
+
+      <!-- Language Selector -->
+     <div class="lang-switcher">
+  <a href="/dashboard?nationalId=<%= citizen.nationalId %>&lang=en">English</a> |
+  <a href="/dashboard?nationalId=<%= citizen.nationalId %>&lang=hi">हिंदी</a> |
+  <a href="/dashboard?nationalId=<%= citizen.nationalId %>&lang=mr">मराठी</a>
+</div>
 
       <div class="topbar-right">
 
@@ -677,7 +687,7 @@
             <div>
 
               <h2>
-                Government Portals
+                <%= __('portals') %>
               </h2>
 
               <p>
@@ -967,8 +977,7 @@
           </div>
 
         </section>
-
-        <section class="dashboard-section">
+                <section class="dashboard-section">
 
           <div class="section-heading">
 
@@ -1018,7 +1027,7 @@
               </div>
 
               <h3>
-                Consent Management
+                <%= __('consent') %>
               </h3>
 
               <p>
@@ -1034,7 +1043,7 @@
               </div>
 
               <h3>
-                Document Reuse
+                <%= __('document') %>
               </h3>
 
               <p>
@@ -1069,7 +1078,7 @@
               </div>
 
               <h3>
-                Notifications
+                <%= __('notifications') %>
               </h3>
 
               <p>
@@ -1085,7 +1094,7 @@
               </div>
 
               <h3>
-                Eligibility Checker
+                <%= __('checker') %>
               </h3>
 
               <p>
@@ -1104,7 +1113,7 @@
               </div>
 
               <h3>
-                Application History
+                <%= __('history') %>
               </h3>
 
               <p>
@@ -1120,7 +1129,7 @@
               </div>
 
               <h3>
-                Grievance Management
+                <%= __('grievance') %>
               </h3>
 
               <p>
@@ -1152,7 +1161,7 @@
               </div>
 
               <h3>
-                Audit Logs
+                <%= __('logs') %>
               </h3>
 
               <p>
@@ -1402,6 +1411,105 @@
     </section>
 
   </main>
+    <!-- Floating AI Chatbot Container -->
+  <div id="ai-chat-container">
+
+    <!-- Toggle Trigger Button -->
+    <button id="ai-chat-toggle" aria-label="Open Support Assistant">
+      <span class="chat-icon">💬</span> Ask BharatSetu AI
+    </button>
+
+    <!-- Chat Dialog Window -->
+    <div id="ai-chat-box" style="display: none;">
+
+      <!-- Header Bar -->
+      <div class="chat-header">
+        <div class="header-info">
+          <span class="status-indicator"></span>
+          <strong>BharatSetu Assistant</strong>
+        </div>
+
+        <span class="header-subtitle">
+          ONEGOV AI Support
+        </span>
+      </div>
+
+      <!-- Scrollable Messages Body -->
+      <div id="ai-chat-messages">
+
+        <div class="message bot-message">
+          Namaste! 👋 I am your portal assistant. How can I help you with schemes, documents, or government portals today?
+        </div>
+
+      </div>
+
+      <!-- Quick Prompt Chips -->
+      <div class="quick-chips">
+
+        <button onclick="window.handleUserMessage('Check Scheme Eligibility')">
+          Check Schemes
+        </button>
+
+        <button onclick="window.handleUserMessage('How does Document Reuse work?')">
+          Document Reuse
+        </button>
+
+        <button onclick="window.handleUserMessage('Track Application Status')">
+          Track Status
+        </button>
+
+      </div>
+
+      <!-- Input Form Footer -->
+      <div class="chat-input-area">
+
+        <input
+          type="text"
+          id="ai-chat-input"
+          placeholder="Ask about schemes, RTO, documents..."
+          autocomplete="off"
+        >
+
+        <button id="ai-chat-send">
+          Send
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Search Functionality -->
+  <script>
+
+    const searchInput = document.getElementById("dashboardSearch");
+
+    searchInput.addEventListener("input", function () {
+
+      const searchText = this.value.toLowerCase().trim();
+
+      const cards = document.querySelectorAll(
+        ".portal-card, .service-card"
+      );
+
+      cards.forEach(card => {
+
+        const text = card.textContent.toLowerCase();
+
+        card.style.display =
+          text.includes(searchText) ? "" : "none";
+
+      });
+
+    });
+
+  </script>
+
+
+  <!-- Load External Chatbot Logic -->
+  <script src="/js/chatbot.js"></script>
 
 </body>
 
