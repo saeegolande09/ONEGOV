@@ -1403,6 +1403,49 @@
     </section>
 
   </main>
+<!-- Floating AI Chatbot Container -->
+<div id="ai-chat-container">
+  <!-- Toggle Trigger Button -->
+  <button id="ai-chat-toggle" aria-label="Open Support Assistant">
+    <span class="chat-icon">💬</span> Ask OneGov AI
+  </button>
+
+  <!-- Chat Dialog Window -->
+  <div id="ai-chat-box" style="display: none;">
+    <!-- Header Bar -->
+    <div class="chat-header">
+      <div class="header-info">
+        <span class="status-indicator"></span>
+        <strong>OneGov Assistant</strong>
+      </div>
+      <span class="header-subtitle">ONEGOV AI Support</span>
+    </div>
+
+    <!-- Scrollable Messages Body -->
+    <div id="ai-chat-messages">
+      <div class="message bot-message">
+        Namaste! 👋 I am your portal assistant. How can I help you with schemes, documents, or government portals today?
+      </div>
+    </div>
+
+    <!-- Quick Prompt Chips -->
+    <div class="quick-chips">
+      <button onclick="window.handleUserMessage('Check Scheme Eligibility')">Check Schemes</button>
+      <button onclick="window.handleUserMessage('How does Document Reuse work?')">Document Reuse</button>
+      <button onclick="window.handleUserMessage('Track Application Status')">Track Status</button>
+    </div>
+
+    <!-- Input Form Footer -->
+    <div class="chat-input-area">
+      <input type="text" id="ai-chat-input" placeholder="Ask about schemes, RTO, documents..." autocomplete="off">
+      <button id="ai-chat-send">Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- Load External Logic Script -->
+<script src="/js/chatbot.js"></script>
+
 
 </body>
 
